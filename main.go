@@ -14,21 +14,24 @@ func main() {
 	/**************初始化校验***********************/
 	fmt.Println("开始加载配置文件...")
 	config, err := base.LoadConfigFromIni("config.ini")
-	if err == nil {
+	if err != nil {
 		fmt.Printf("加载配置文件失败：%v \n", err)
+		return
 	}
 	fmt.Println("开始项目初始化校验...")
 	databaseName := config.System.Database
 
 	_, err = os.Stat(databaseName)
 	var db *gorm.DB
-	db, err = gorm.Open(sqlite.Open(databaseName))
-	if err != nil {
+
+	_, err = os.Stat(databaseName)
+
+	db, dbErr := gorm.Open(sqlite.Open(databaseName))
+	if dbErr != nil {
 		fmt.Printf("打开SQLite连接错误：%v \n", err)
 		return
 	}
 
-	_, err = os.Stat(databaseName)
 	if err != nil || os.IsNotExist(err) {
 		fmt.Println("第一次部署项目，需要创建SQLite")
 		db.AutoMigrate(
@@ -38,6 +41,15 @@ func main() {
 		bSqlite.CreateMockData(db)
 	}
 	/**************加载配置库***********************/
+	pDriverList, err := bSqlite.LoadAllDriver(db)
+	if err != nil {
+		fmt.Printf("加载配置库失败:%v\n", err)
+	}
+
+	//temp test
+	for _, item := range pDriverList {
+		fmt.Printf("pDriverList: %v \n", item)
+	}
 
 	/**************加载驱动插件***********************/
 	/**************为配置库实时表建立内存结构***********************/

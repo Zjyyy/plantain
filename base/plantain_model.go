@@ -22,6 +22,10 @@ type PDriverInDatabase struct {
 	RtTableName   string
 }
 
+func (PDriverInDatabase) TableName() string {
+	return "p_driver_lists"
+}
+
 type RtTable struct {
 	PID          string
 	Value        string
