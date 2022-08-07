@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/go-ini/ini v1.66.6
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	gorm.io/driver/sqlite v1.3.6
 	gorm.io/gorm v1.23.8
 )

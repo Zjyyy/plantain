@@ -5,6 +5,8 @@ import (
 	"os"
 	"plantain/base"
 	bSqlite "plantain/base/sqlite"
+	"plantain/collector"
+	"plantain/core"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -41,17 +43,18 @@ func main() {
 		bSqlite.CreateMockData(db)
 	}
 	/**************加载配置库***********************/
-	pDriverList, err := bSqlite.LoadAllDriver(db)
+	pDriverArr, err := bSqlite.LoadAllDriver(db)
 	if err != nil {
 		fmt.Printf("加载配置库失败:%v\n", err)
 	}
 
 	//temp test
-	for _, item := range pDriverList {
-		fmt.Printf("pDriverList: %v \n", item)
-	}
+	// for _, item := range pDriverArr {
+	// 	fmt.Printf("pDriverList: %v \n", item)
+	// }
 
 	/**************加载驱动插件***********************/
+	collector.InitCollector(pDriverArr, core.New())
 	/**************为配置库实时表建立内存结构***********************/
 	/**************启动HttpServer***********************/
 }
