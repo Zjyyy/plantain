@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/signal"
 	"plantain/base"
 	bSqlite "plantain/base/sqlite"
-	"plantain/collector"
-	"plantain/core"
+	"plantain/server"
+	"syscall"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -49,12 +51,21 @@ func main() {
 	}
 
 	//temp test
-	// for _, item := range pDriverArr {
-	// 	fmt.Printf("pDriverList: %v \n", item)
-	// }
+	for _, item := range pDriverArr {
+		fmt.Printf("pDriverList: %v \n", item)
+	}
 
 	/**************加载驱动插件***********************/
-	collector.InitCollector(pDriverArr, core.New())
+	//collector.InitCollector(pDriverArr, core.New())
 	/**************为配置库实时表建立内存结构***********************/
 	/**************启动HttpServer***********************/
+	server.RouterWeb(":6280")
+
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+	select {
+	case <-signalChan:
+		log.Println("plantain程序退出")
+		return
+	}
 }
