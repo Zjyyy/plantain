@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"plantain/base"
 	bSqlite "plantain/base/sqlite"
+	"plantain/collector"
+	"plantain/core"
 	"plantain/server"
 	"syscall"
 
@@ -56,7 +58,7 @@ func main() {
 	}
 
 	/**************加载驱动插件***********************/
-	//collector.InitCollector(pDriverArr, core.New())
+	collector.InitCollector(pDriverArr, core.New())
 	/**************为配置库实时表建立内存结构***********************/
 	/**************启动HttpServer***********************/
 	server.RouterWeb(":6280")

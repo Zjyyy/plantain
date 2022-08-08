@@ -2,6 +2,10 @@ module plantain
 
 go 1.18
 
+require plantain-common/common v0.0.0
+
+replace plantain-common/common => ../plantain-common
+
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-ini/ini v1.66.6
