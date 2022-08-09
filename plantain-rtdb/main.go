@@ -58,7 +58,8 @@ func main() {
 	}
 
 	/**************加载驱动插件***********************/
-	collector.InitCollector(pDriverArr, core.New())
+	m := collector.InitCollector(pDriverArr, core.New())
+	m.Start()
 	/**************为配置库实时表建立内存结构***********************/
 	/**************启动HttpServer***********************/
 	server.RouterWeb(":6280")

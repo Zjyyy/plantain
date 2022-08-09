@@ -16,22 +16,22 @@ func CreateMockDriverList(db *gorm.DB) {
 		Id:            1,
 		DriverName:    "Demo1",
 		Version:       "0.0.1",
-		DriverDllPath: "",
+		DriverDllPath: "/home/dev/plantain-driver/plantain-demo-opc-driver/opcdriver.so",
 		ConnStr:       "dev-asyncua;4840",
 		Setting:       "setting1;setting2",
 		Des:           "opc ua demo",
 		RtTableName:   "rt_opcdemo",
 	})
-	AddDriverListItem(db, &base.PDriverInDatabase{
-		Id:            2,
-		DriverName:    "Demo2",
-		Version:       "0.0.1",
-		DriverDllPath: "",
-		ConnStr:       "dev-asyncua;4840",
-		Setting:       "setting1;setting2",
-		Des:           "modbus demo",
-		RtTableName:   "rt_modbusdemo",
-	})
+	// AddDriverListItem(db, &base.PDriverInDatabase{
+	// 	Id:            2,
+	// 	DriverName:    "Demo2",
+	// 	Version:       "0.0.1",
+	// 	DriverDllPath: "",
+	// 	ConnStr:       "dev-asyncua;4840",
+	// 	Setting:       "setting1;setting2",
+	// 	Des:           "modbus demo",
+	// 	RtTableName:   "rt_modbusdemo",
+	// })
 }
 
 func CreateMockRTTable(db *gorm.DB) {

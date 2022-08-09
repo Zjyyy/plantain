@@ -44,7 +44,9 @@ func (d *driverManager) taskWork(index int) {
 	handler.Initialize(
 		d.driverPlugins[index].Configure,
 		d.rtdbMethods)
-
+	for {
+		handler.Do()
+	}
 }
 
 func createCommonDriverConfigure(conf base.PDriver) common.DriverConfigure {
