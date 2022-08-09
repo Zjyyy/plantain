@@ -4,30 +4,33 @@ import (
 	"log"
 	"plantain-common/common"
 	"plantain/base"
+	"plantain/core"
 	"plugin"
+
+	"github.com/patrickmn/go-cache"
 )
 
 type driverManager struct {
 	driverPlugins []DriverPlugin
-	rtdbMethods   common.IRTDB
 }
 type DriverPlugin struct {
 	Configure     common.DriverConfigure
-	PluginHandler common.IDriver
+	RTDBHandler   common.IRTDB
+	DriverHandler common.IDriver
 }
 
-func InitCollector(pDriverArr []base.PDriver, rtdbMethods common.IRTDB) *driverManager {
+func InitCollector(pDriverArr []base.PDriver, cacheSet map[string]*cache.Cache) *driverManager {
 	driverPlugins := make([]DriverPlugin, len(pDriverArr))
 
 	for index, item := range pDriverArr {
 		driverPlugins[index] = DriverPlugin{
+			RTDBHandler:   core.NewRtdbMethod(cacheSet[item.DriverName]),
 			Configure:     createCommonDriverConfigure(item),
-			PluginHandler: loadPlugin(item.DriverDllPath),
+			DriverHandler: loadDriverPlugin(item.DriverDllPath),
 		}
 	}
 	return &driverManager{
 		driverPlugins,
-		rtdbMethods,
 	}
 }
 
@@ -40,10 +43,10 @@ func (d *driverManager) Start() {
 }
 
 func (d *driverManager) taskWork(index int) {
-	handler := d.driverPlugins[index].PluginHandler
+	handler := d.driverPlugins[index].DriverHandler
 	handler.Initialize(
 		d.driverPlugins[index].Configure,
-		d.rtdbMethods)
+		d.driverPlugins[index].RTDBHandler)
 	for {
 		handler.Do()
 	}
@@ -66,7 +69,7 @@ func createCommonDriverConfigure(conf base.PDriver) common.DriverConfigure {
 	}
 }
 
-func loadPlugin(path string) common.IDriver {
+func loadDriverPlugin(path string) common.IDriver {
 	plug, err := plugin.Open(path)
 	if err != nil {
 		panic(err)

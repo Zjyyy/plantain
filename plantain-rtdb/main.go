@@ -52,15 +52,12 @@ func main() {
 		fmt.Printf("加载配置库失败:%v\n", err)
 	}
 
-	//temp test
-	for _, item := range pDriverArr {
-		fmt.Printf("pDriverList: %v \n", item)
-	}
-
-	/**************加载驱动插件***********************/
-	m := collector.InitCollector(pDriverArr, core.New())
-	m.Start()
 	/**************为配置库实时表建立内存结构***********************/
+	cacheSet := core.BuildMemoryStructure(pDriverArr)
+	fmt.Println("已在内存中建立了内存表")
+	/**************加载驱动插件***********************/
+	m := collector.InitCollector(pDriverArr, cacheSet)
+	m.Start()
 	/**************启动HttpServer***********************/
 	server.RouterWeb(":6280")
 

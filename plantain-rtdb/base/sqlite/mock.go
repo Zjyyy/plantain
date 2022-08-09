@@ -53,7 +53,7 @@ func CreateMockModbusRTTable(db *gorm.DB) {
 	})
 	AddRTTableItem(db, "rt_modbusdemo", &base.RtTable{
 		PID:          "Tag02",
-		Value:        "0",
+		Value:        "1.3",
 		ValueType:    "float",
 		Address:      "10002",
 		LimitUp:      "10",

@@ -22,7 +22,8 @@ func (d *driver) Initialize(conf common.DriverConfigure, rtdb common.IRTDB) erro
 func (d *driver) Do() error {
 	log.Println(">>>>>>Do")
 	d.rtdb.Write("Tag01", "1")
-	d.rtdb.Read("Tag02")
+	val:=d.rtdb.Read("Tag01")
+	log.Printf(">>"+val+"fff")
 	time.Sleep(time.Duration(2) * time.Second)
 	return nil
 }
