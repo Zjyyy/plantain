@@ -1,0 +1,13 @@
+.content {
+    display: flex;
+    flex-direction: column;
+
+    label{
+        width: 100px;
+        display: block;
+    }
+    
+    .container{
+        margin: 2px 0;
+    }
+}

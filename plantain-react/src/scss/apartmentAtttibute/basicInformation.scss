@@ -1,0 +1,13 @@
+.basic_information_block{
+    display: flex;
+    flex-direction: column;
+    
+    label{
+        width: 100px;
+        display: block;
+    }
+
+    .basic_information_space{
+        margin: 2px 0;
+    }
+}

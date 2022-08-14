@@ -1,0 +1,24 @@
+.client_message{
+    display: flex;
+    flex-direction: row;
+
+    .client_basic_message,.client_history_message{margin: 0 20px;}
+
+    .client_basic_message{
+        width: 500px;
+        display: flex;
+        flex-direction: column;
+        
+        label{
+            width:60px;
+            display: block;
+        }
+        .client_message_space{
+            margin: 5px 0;
+        }
+    }
+
+    .client_history_message{
+        width: 400px;
+    }
+}

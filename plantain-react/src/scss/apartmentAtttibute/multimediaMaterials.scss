@@ -1,0 +1,40 @@
+.multimedia_materials_block{
+    width: 600px;
+
+    .multimedia_card_panel{
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        align-items: center;
+
+        .mutimedia_card{
+            width: 300;
+            margin: 10px 5px;
+        }
+    }
+}
+
+.multimedia_materials_attribute{
+    display: flex;
+    flex-direction: row;
+
+    .multimedia_materials_attribute_left{
+        display: flex;
+        flex-direction: column;
+        margin: 10px 25px;
+        width:800px;
+
+        label{
+            width: 80px;
+            display: block;
+        }
+    }
+
+    .multimedia_materials_attribute_right{
+        margin: 10px 25px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
