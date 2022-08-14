@@ -14,15 +14,15 @@ func NewRtdbMethod(db *cache.Cache) *rtdbMethod {
 	}
 }
 
-func (m *rtdbMethod) Write(pid string, val string) bool {
-	m.db.Set(pid, val, cache.NoExpiration)
+func (m *rtdbMethod) Write(pid string, value interface{}) bool {
+	m.db.Set(pid, value, cache.NoExpiration)
 	return true
 }
 
-func (m *rtdbMethod) Read(pid string) string {
+func (m *rtdbMethod) Read(pid string) interface{} {
 	val, found := m.db.Get(pid)
 	if found {
-		return val.(string)
+		return val
 	}
 	return ""
 }

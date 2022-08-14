@@ -1,6 +1,6 @@
 package common
 
 type IRTDB interface {
-	Write(pid string, value string) bool
-	Read(pid string) string
+	Write(pid string, value interface{}) bool
+	Read(pid string) interface{}
 }

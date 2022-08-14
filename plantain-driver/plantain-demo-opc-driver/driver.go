@@ -23,7 +23,7 @@ func (d *driver) Do() error {
 	log.Println(">>>>>>Do")
 	d.rtdb.Write("Tag01", "1")
 	val:=d.rtdb.Read("Tag01")
-	log.Printf(">>"+val+"fff")
+	log.Printf(">>"+val.(string)+"fff")
 	time.Sleep(time.Duration(2) * time.Second)
 	return nil
 }
