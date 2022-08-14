@@ -5,22 +5,22 @@ import (
 )
 
 type rtdbMethod struct {
-	db *cache.Cache
+	cache *cache.Cache
 }
 
-func NewRtdbMethod(db *cache.Cache) *rtdbMethod {
+func NewRtdbMethod(cache *cache.Cache) *rtdbMethod {
 	return &rtdbMethod{
-		db,
+		cache,
 	}
 }
 
 func (m *rtdbMethod) Write(pid string, value interface{}) bool {
-	m.db.Set(pid, value, cache.NoExpiration)
+	m.cache.Set(pid, value, cache.NoExpiration)
 	return true
 }
 
 func (m *rtdbMethod) Read(pid string) interface{} {
-	val, found := m.db.Get(pid)
+	val, found := m.cache.Get(pid)
 	if found {
 		return val
 	}
