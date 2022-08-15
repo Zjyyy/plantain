@@ -22,11 +22,11 @@ type DriverPlugin struct {
 func InitCollector(pDriverArr []base.PDriver, cacheSet map[string]*cache.Cache) *driverManager {
 	driverPlugins := make([]DriverPlugin, len(pDriverArr))
 
-	for index, item := range pDriverArr {
+	for index, pDriver := range pDriverArr {
 		driverPlugins[index] = DriverPlugin{
-			RTDBHandler:   core.NewRtdbMethod(cacheSet[item.DriverName]),
-			Configure:     createCommonDriverConfigure(item),
-			DriverHandler: loadDriverPlugin(item.DriverDllPath),
+			RTDBHandler:   core.NewRtdbMethod(pDriver, cacheSet[pDriver.DriverName]),
+			Configure:     createCommonDriverConfigure(pDriver),
+			DriverHandler: loadDriverPlugin(pDriver.DriverDllPath),
 		}
 	}
 	return &driverManager{

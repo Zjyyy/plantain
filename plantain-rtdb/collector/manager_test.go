@@ -12,7 +12,7 @@ func createMockPDriver() []base.PDriver {
 		PID:          "Tag01",
 		Value:        "1",
 		ValueType:    "int",
-		Address:      "10002",
+		Address:      "10001",
 		LimitUp:      "10",
 		LimitDown:    "-1",
 		Level:        1,
@@ -52,16 +52,19 @@ func createMockPDriver() []base.PDriver {
 }
 
 func TestInitCollector(t *testing.T) {
-}
-
-var LoadDriverPlugin = loadDriverPlugin
-
-func TestLoadDriverPlugin(t *testing.T) {
-
+	//后续考虑支持插拔式使用loadPlugin方法时补上
 }
 
 var CreateCommonDriverConfigure = createCommonDriverConfigure
 
 func TestCreateCommonDriverConfigure(t *testing.T) {
+	pDriver := createMockPDriver()
+	configure := createCommonDriverConfigure(pDriver[0])
 
+	if configure.Id != 1 ||
+		configure.ConnStr != "127.0.0.1:3000" ||
+		configure.DriverName != "Name1" ||
+		configure.RtPoint["Tag01"] != "10001" {
+		t.Fatal("创建驱动配置的数据结构异常")
+	}
 }
