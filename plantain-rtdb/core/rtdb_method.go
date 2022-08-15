@@ -21,6 +21,7 @@ func NewRtdbMethod(pDriver base.PDriver, cache *cache.Cache) *rtdbMethod {
 
 func (m *rtdbMethod) Write(pid string, value interface{}) bool {
 	oldVal, found := m.cache.Get(pid)
+
 	if found {
 		if oldVal != value {
 			m.alarm.AlarmHandler(pid, value)
