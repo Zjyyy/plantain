@@ -43,32 +43,38 @@ func CreateMockModbusRTTable(db *gorm.DB) {
 	CreateRTTable(db, "rt_modbusdemo")
 	AddRTTableItem(db, "rt_modbusdemo", &base.RtTable{
 		PID:          "Tag01",
+		Des:          "",
 		Value:        "1",
 		ValueType:    "int",
 		Address:      "10001",
 		LimitUp:      "10",
 		LimitDown:    "-1",
+		AlarmDes:     "",
 		Level:        1,
 		IsHistorical: true,
 	})
 	AddRTTableItem(db, "rt_modbusdemo", &base.RtTable{
 		PID:          "Tag02",
+		Des:          "",
 		Value:        "1.3",
 		ValueType:    "float",
 		Address:      "10002",
 		LimitUp:      "10",
 		LimitDown:    "-10",
+		AlarmDes:     "",
 		Level:        1,
 		IsHistorical: false,
 	})
 	AddRTTableItem(db, "rt_modbusdemo", &base.RtTable{
 		PID:          "Tag03",
+		Des:          "",
 		Value:        "false",
 		ValueType:    "bool",
 		Address:      "10003",
 		LimitUp:      "true",
 		LimitDown:    "false",
 		Level:        1,
+		AlarmDes:     "",
 		IsHistorical: true,
 	})
 }
@@ -77,32 +83,38 @@ func CreateMockOPCRTTable(db *gorm.DB) {
 	CreateRTTable(db, "rt_opcdemo")
 	AddRTTableItem(db, "rt_opcdemo", &base.RtTable{
 		PID:          "Tag01",
+		Des:          "",
 		Value:        "1",
 		ValueType:    "int",
 		Address:      "10001",
 		LimitUp:      "10",
 		LimitDown:    "-1",
 		Level:        1,
+		AlarmDes:     "",
 		IsHistorical: true,
 	})
 	AddRTTableItem(db, "rt_opcdemo", &base.RtTable{
 		PID:          "Tag02",
+		Des:          "",
 		Value:        "0",
 		ValueType:    "float",
 		Address:      "10002",
 		LimitUp:      "10",
 		LimitDown:    "-10",
 		Level:        1,
+		AlarmDes:     "",
 		IsHistorical: false,
 	})
 	AddRTTableItem(db, "rt_opcdemo", &base.RtTable{
 		PID:          "Tag03",
+		Des:          "",
 		Value:        "false",
 		ValueType:    "bool",
 		Address:      "10003",
 		LimitUp:      "true",
 		LimitDown:    "false",
 		Level:        1,
+		AlarmDes:     "",
 		IsHistorical: true,
 	})
 }
