@@ -10,6 +10,7 @@ import (
 	"plantain/collector"
 	"plantain/core"
 	"plantain/server"
+	"plantain/transfer"
 	"syscall"
 
 	"gorm.io/driver/sqlite"
@@ -24,6 +25,12 @@ func main() {
 		fmt.Printf("加载配置文件失败：%v \n", err)
 		return
 	}
+	//根据配置文件初始化AlarmHistory
+	transfer.NewAlarmHistory(config.Alarm)
+
+	//根据配置文件初始化HistoryServe
+	//根据配置文件初始化Notice
+
 	fmt.Println("开始项目初始化校验...")
 	databaseName := config.System.Database
 
