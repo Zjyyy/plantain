@@ -14,10 +14,12 @@ type monitorAlarm struct {
 }
 
 type alarmConfItem struct {
+	Des       string
 	ValueType string
 	LimitUp   string
 	LimitDown string
 	Level     uint
+	AlarmDes  string
 }
 type AlarmConfMap map[string]alarmConfItem
 
@@ -62,10 +64,12 @@ func parseForAlarm(pDriver *base.PDriver) AlarmConfMap {
 	result := make(map[string]alarmConfItem)
 	for _, item := range pDriver.RtTable {
 		result[item.PID] = alarmConfItem{
+			Des:       item.Des,
 			ValueType: item.ValueType,
 			LimitUp:   item.LimitUp,
 			LimitDown: item.LimitDown,
 			Level:     1,
+			AlarmDes:  item.AlarmDes,
 		}
 	}
 	return result
