@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 	//根据配置文件初始化AlarmHistory
-	transfer.NewAlarmHistory(config.Alarm)
+	alarmTransfer := transfer.NewAlarmHistory(config.Alarm)
 
 	//根据配置文件初始化HistoryServe
 	//根据配置文件初始化Notice
@@ -63,7 +63,7 @@ func main() {
 	cacheSet := core.BuildMemoryStructure(pDriverArr)
 	fmt.Println("已在内存中建立了内存表")
 	/**************加载驱动插件***********************/
-	m := collector.InitCollector(pDriverArr, cacheSet)
+	m := collector.InitCollector(pDriverArr, cacheSet, alarmTransfer)
 	m.Start()
 	/**************启动HttpServer***********************/
 	server.RouterWeb(":6280")

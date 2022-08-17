@@ -5,6 +5,7 @@ import (
 	"plantain-common/common"
 	"plantain/base"
 	"plantain/core"
+	"plantain/transfer"
 	"plugin"
 
 	"github.com/patrickmn/go-cache"
@@ -19,12 +20,14 @@ type DriverPlugin struct {
 	DriverHandler common.IDriver
 }
 
-func InitCollector(pDriverArr []base.PDriver, cacheSet map[string]*cache.Cache) *driverManager {
+func InitCollector(pDriverArr []base.PDriver, cacheSet map[string]*cache.Cache,
+	alarmTransfer *transfer.AlarmHistory) *driverManager {
+
 	driverPlugins := make([]DriverPlugin, len(pDriverArr))
 
 	for index, pDriver := range pDriverArr {
 		driverPlugins[index] = DriverPlugin{
-			RTDBHandler:   core.NewRtdbMethod(pDriver, cacheSet[pDriver.DriverName]),
+			RTDBHandler:   core.NewRtdbMethod(pDriver, cacheSet[pDriver.DriverName], alarmTransfer),
 			Configure:     createCommonDriverConfigure(pDriver),
 			DriverHandler: loadDriverPlugin(pDriver.DriverDllPath),
 		}

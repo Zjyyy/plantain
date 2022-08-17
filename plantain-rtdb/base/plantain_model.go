@@ -38,3 +38,12 @@ type RtTable struct {
 	AlarmDes     string
 	IsHistorical bool
 }
+
+type AlarmHistoryMessage struct {
+	Table     string
+	PID       string
+	Des       string
+	AlarmDes  string
+	ValueType string
+	Value     interface{}
+}
