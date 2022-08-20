@@ -4,18 +4,18 @@ import (
 	"github.com/go-ini/ini"
 )
 
-type System struct {
+type SqliteConf struct {
 	Database string `ini:"database"`
 }
-type Alarm struct {
+type AlarmTranferConf struct {
 	Url      string `ini:"url"`
 	Token    string `ini:"token"`
 	Database string `ini:"database"`
 	Bucket   string `ini:"bucket"`
 }
 type Config struct {
-	System System `ini:"system"`
-	Alarm  Alarm  `ini:"alarm"`
+	Sqlite       SqliteConf       `ini:"sqlite"`
+	AlarmTranfer AlarmTranferConf `ini:"alarm"`
 }
 
 func LoadConfigFromIni(fileName string) (Config, error) {

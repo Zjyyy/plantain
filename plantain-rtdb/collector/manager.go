@@ -11,6 +11,9 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
+type DriverManager struct {
+	*driverManager
+}
 type driverManager struct {
 	driverPlugins []DriverPlugin
 }
@@ -19,15 +22,24 @@ type DriverPlugin struct {
 	RTDBHandler   common.IRTDB
 	DriverHandler common.IDriver
 }
+type CollectorParameters struct {
+	DriverArr     *[]base.PDriver
+	CacheSet      *map[string]*cache.Cache
+	AlarmTransfer *transfer.AlarmHistory
+}
 
-func InitCollector(pDriverArr []base.PDriver, cacheSet map[string]*cache.Cache,
-	alarmTransfer *transfer.AlarmHistory) *driverManager {
+func InitCollector(collectorParameters *CollectorParameters) *DriverManager {
+	return &DriverManager{
+		newDriverManager(collectorParameters),
+	}
+}
 
-	driverPlugins := make([]DriverPlugin, len(pDriverArr))
+func newDriverManager(cp *CollectorParameters) *driverManager {
+	driverPlugins := make([]DriverPlugin, len(*cp.DriverArr))
 
-	for index, pDriver := range pDriverArr {
+	for index, pDriver := range *cp.DriverArr {
 		driverPlugins[index] = DriverPlugin{
-			RTDBHandler:   core.NewRtdbMethod(pDriver, cacheSet[pDriver.DriverName], alarmTransfer),
+			RTDBHandler:   core.NewRtdbMethod(pDriver, (*cp.CacheSet)[pDriver.DriverName], cp.AlarmTransfer),
 			Configure:     createCommonDriverConfigure(pDriver),
 			DriverHandler: loadDriverPlugin(pDriver.DriverDllPath),
 		}

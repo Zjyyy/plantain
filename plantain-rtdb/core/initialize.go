@@ -6,10 +6,10 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
-func BuildMemoryStructure(driverArr []base.PDriver) map[string]*cache.Cache {
+func BuildMemoryStructure(driverArr *[]base.PDriver) map[string]*cache.Cache {
 	cacheSet := make(map[string]*cache.Cache)
 
-	for _, driver := range driverArr {
+	for _, driver := range *driverArr {
 		_, ok := cacheSet[driver.DriverName]
 		if ok {
 			panic("存在两个重复驱动名，请检查配置，DriverName：" + driver.DriverName)

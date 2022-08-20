@@ -45,5 +45,5 @@ type AlarmHistoryMessage struct {
 	Des       string
 	AlarmDes  string
 	ValueType string
-	Value     interface{}
+	Value     string
 }

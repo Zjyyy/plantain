@@ -53,7 +53,7 @@ func (m *monitorAlarm) AlarmHandler(pid string, val interface{}) {
 				Des:       item.Des,
 				AlarmDes:  item.AlarmDes,
 				ValueType: item.ValueType,
-				Value:     val,
+				Value:     val.(string),
 			})
 		}
 	} else if item.ValueType == "float" {
@@ -67,7 +67,7 @@ func (m *monitorAlarm) AlarmHandler(pid string, val interface{}) {
 				Des:       item.Des,
 				AlarmDes:  item.AlarmDes,
 				ValueType: item.ValueType,
-				Value:     val,
+				Value:     val.(string),
 			})
 		}
 	} else if item.ValueType == "boolen" {
@@ -80,7 +80,7 @@ func (m *monitorAlarm) AlarmHandler(pid string, val interface{}) {
 				Des:       item.Des,
 				AlarmDes:  item.AlarmDes,
 				ValueType: item.ValueType,
-				Value:     val,
+				Value:     val.(string),
 			})
 		}
 	}

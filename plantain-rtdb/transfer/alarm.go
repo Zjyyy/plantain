@@ -1,7 +1,6 @@
 package transfer
 
 import (
-	"fmt"
 	"log"
 	"plantain/base"
 
@@ -16,9 +15,9 @@ type AlarmHistory struct {
 	url              string
 }
 
-func NewAlarmHistory(c base.Alarm) *AlarmHistory {
+func NewAlarmHistory(c *base.AlarmTranferConf) *AlarmHistory {
 	return &AlarmHistory{
-		alarmHistoryChan: make(chan base.AlarmHistoryMessage),
+		alarmHistoryChan: make(chan base.AlarmHistoryMessage, 100),
 		database:         c.Database,
 		token:            c.Token,
 		bucket:           c.Bucket,
@@ -28,10 +27,14 @@ func NewAlarmHistory(c base.Alarm) *AlarmHistory {
 
 func (a *AlarmHistory) Start() {
 	log.Println("启动历史报警队列")
-	alarmMessage := <-a.alarmHistoryChan
-	for {
-		go a.writeHistoryAlarmToInfluxdb(alarmMessage)
-	}
+	go func() {
+		log.Println("开始报警队列接收循环")
+		for {
+			alarmMessage := <-a.alarmHistoryChan
+			go a.writeHistoryAlarmToInfluxdb(alarmMessage)
+		}
+	}()
+
 }
 func (a *AlarmHistory) AddAlarm(am base.AlarmHistoryMessage) {
 	log.Printf("将报警 %v 添加到alarmHistoryChan中\n", am.AlarmDes)
@@ -39,17 +42,19 @@ func (a *AlarmHistory) AddAlarm(am base.AlarmHistoryMessage) {
 }
 
 func (a *AlarmHistory) writeHistoryAlarmToInfluxdb(am base.AlarmHistoryMessage) {
-	log.Printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.%v \n", am.Des)
 	client := influxdb2.NewClient(a.url, a.token)
 
 	// get non-blocking write client
 	writeAPI := client.WriteAPI(a.database, a.bucket)
 
 	// write line protocol
-	writeAPI.WriteRecord(
-		fmt.Sprintf("%s,unit=string value=%s,valueType=%s,Des=%s,AlarmDes=%s",
-			am.Table, am.Value, am.ValueType, am.Des, am.AlarmDes))
-
+	p := influxdb2.NewPointWithMeasurement(am.Table).
+		AddTag("pid", am.PID).
+		AddField("des", am.Des).
+		AddField("alarmDes", am.AlarmDes).
+		AddField("valueType", am.ValueType).
+		AddField("value", am.Value)
+	writeAPI.WritePoint(p)
 	// Flush writes
 	writeAPI.Flush()
 	client.Close()
