@@ -25,7 +25,7 @@ type DriverPlugin struct {
 type CollectorParameters struct {
 	DriverArr     *[]base.PDriver
 	CacheSet      *map[string]*cache.Cache
-	AlarmTransfer *transfer.AlarmHistory
+	AlarmTransfer *transfer.AlarmHistoryTranfer
 }
 
 func InitCollector(collectorParameters *CollectorParameters) *DriverManager {

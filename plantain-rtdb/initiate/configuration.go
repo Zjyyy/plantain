@@ -10,8 +10,8 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
-func ConfigurationTransferAlarm(conf *base.AlarmTranferConf) *transfer.AlarmHistory {
-	return transfer.NewAlarmHistory(conf)
+func ConfigurationTransferAlarm(conf *base.AlarmTranferConf) *transfer.AlarmHistoryTranfer {
+	return transfer.NewAlarmHistoryTranfer(conf)
 }
 
 func ConfigurationMemoryStructure(driverArr *[]base.PDriver) map[string]*cache.Cache {

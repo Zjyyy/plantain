@@ -7,7 +7,7 @@ import (
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 )
 
-type AlarmHistory struct {
+type AlarmHistoryTranfer struct {
 	alarmHistoryChan chan base.AlarmHistoryMessage
 	database         string
 	token            string
@@ -15,8 +15,8 @@ type AlarmHistory struct {
 	url              string
 }
 
-func NewAlarmHistory(c *base.AlarmTranferConf) *AlarmHistory {
-	return &AlarmHistory{
+func NewAlarmHistoryTranfer(c *base.AlarmTranferConf) *AlarmHistoryTranfer {
+	return &AlarmHistoryTranfer{
 		alarmHistoryChan: make(chan base.AlarmHistoryMessage, 100),
 		database:         c.Database,
 		token:            c.Token,
@@ -25,7 +25,7 @@ func NewAlarmHistory(c *base.AlarmTranferConf) *AlarmHistory {
 	}
 }
 
-func (a *AlarmHistory) Start() {
+func (a *AlarmHistoryTranfer) Start() {
 	log.Println("启动历史报警队列")
 	go func() {
 		log.Println("开始报警队列接收循环")
@@ -36,12 +36,12 @@ func (a *AlarmHistory) Start() {
 	}()
 
 }
-func (a *AlarmHistory) AddAlarm(am base.AlarmHistoryMessage) {
+func (a *AlarmHistoryTranfer) AddAlarm(am base.AlarmHistoryMessage) {
 	log.Printf("将报警 %v 添加到alarmHistoryChan中\n", am.AlarmDes)
 	a.alarmHistoryChan <- am
 }
 
-func (a *AlarmHistory) writeHistoryAlarmToInfluxdb(am base.AlarmHistoryMessage) {
+func (a *AlarmHistoryTranfer) writeHistoryAlarmToInfluxdb(am base.AlarmHistoryMessage) {
 	client := influxdb2.NewClient(a.url, a.token)
 
 	// get non-blocking write client

@@ -1,7 +1,6 @@
 package core
 
 import (
-	"log"
 	"plantain/base"
 	"plantain/core/monitor"
 	"plantain/transfer"
@@ -14,7 +13,7 @@ type rtdbMethod struct {
 	alarm *monitor.MonitorAlarm
 }
 
-func NewRtdbMethod(pDriver base.PDriver, cache *cache.Cache, alarmTransfer *transfer.AlarmHistory) *rtdbMethod {
+func NewRtdbMethod(pDriver base.PDriver, cache *cache.Cache, alarmTransfer *transfer.AlarmHistoryTranfer) *rtdbMethod {
 	return &rtdbMethod{
 		cache: cache,
 		alarm: monitor.NewMonitorAlarm(&pDriver, alarmTransfer),
@@ -23,10 +22,10 @@ func NewRtdbMethod(pDriver base.PDriver, cache *cache.Cache, alarmTransfer *tran
 
 func (m *rtdbMethod) Write(pid string, value interface{}) bool {
 	oldVal, found := m.cache.Get(pid)
-	log.Printf(">>>>>oldVal:%v value:%v", oldVal, value)
+
 	if found {
 		if oldVal != value {
-			m.alarm.AlarmHandler(pid, value)
+			m.alarm.AlarmJuddge(pid, value)
 		}
 	} else {
 		panic("Write Method:内存结构出现错误")

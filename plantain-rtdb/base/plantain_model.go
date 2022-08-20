@@ -47,3 +47,11 @@ type AlarmHistoryMessage struct {
 	ValueType string
 	Value     string
 }
+
+type HistoricalMessage struct {
+	Table     string
+	PID       string
+	Value     string
+	ValueType string
+	Des       string
+}
