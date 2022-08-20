@@ -2,17 +2,15 @@ package sqlite
 
 import (
 	"plantain/base"
-
-	"gorm.io/gorm"
 )
 
-func CreateMockData(db *gorm.DB) {
-	CreateMockDriverList(db)
-	CreateMockRTTable(db)
+func CreateMockData(handler *ConfigurationDatabaseHandler) {
+	CreateMockDriverList(handler)
+	CreateMockRTTable(handler)
 }
 
-func CreateMockDriverList(db *gorm.DB) {
-	AddDriverListItem(db, &base.PDriverInDatabase{
+func CreateMockDriverList(handler *ConfigurationDatabaseHandler) {
+	handler.AddDriverListItem(&base.PDriverInDatabase{
 		Id:            1,
 		DriverName:    "Demo1",
 		Version:       "0.0.1",
@@ -34,14 +32,14 @@ func CreateMockDriverList(db *gorm.DB) {
 	// })
 }
 
-func CreateMockRTTable(db *gorm.DB) {
-	CreateMockModbusRTTable(db)
-	CreateMockOPCRTTable(db)
+func CreateMockRTTable(handler *ConfigurationDatabaseHandler) {
+	CreateMockModbusRTTable(handler)
+	CreateMockOPCRTTable(handler)
 }
 
-func CreateMockModbusRTTable(db *gorm.DB) {
-	CreateRTTable(db, "rt_modbusdemo")
-	AddRTTableItem(db, "rt_modbusdemo", &base.RtTable{
+func CreateMockModbusRTTable(handler *ConfigurationDatabaseHandler) {
+	handler.CreateRTTable("rt_modbusdemo")
+	handler.AddRTTableItem("rt_modbusdemo", &base.RtTable{
 		PID:          "Tag01",
 		Des:          "",
 		Value:        "1",
@@ -53,7 +51,7 @@ func CreateMockModbusRTTable(db *gorm.DB) {
 		Level:        1,
 		IsHistorical: true,
 	})
-	AddRTTableItem(db, "rt_modbusdemo", &base.RtTable{
+	handler.AddRTTableItem("rt_modbusdemo", &base.RtTable{
 		PID:          "Tag02",
 		Des:          "",
 		Value:        "1.3",
@@ -65,7 +63,7 @@ func CreateMockModbusRTTable(db *gorm.DB) {
 		Level:        1,
 		IsHistorical: false,
 	})
-	AddRTTableItem(db, "rt_modbusdemo", &base.RtTable{
+	handler.AddRTTableItem("rt_modbusdemo", &base.RtTable{
 		PID:          "Tag03",
 		Des:          "",
 		Value:        "false",
@@ -79,9 +77,9 @@ func CreateMockModbusRTTable(db *gorm.DB) {
 	})
 }
 
-func CreateMockOPCRTTable(db *gorm.DB) {
-	CreateRTTable(db, "rt_opcdemo")
-	AddRTTableItem(db, "rt_opcdemo", &base.RtTable{
+func CreateMockOPCRTTable(handler *ConfigurationDatabaseHandler) {
+	handler.CreateRTTable("rt_opcdemo")
+	handler.AddRTTableItem("rt_opcdemo", &base.RtTable{
 		PID:          "Tag01",
 		Des:          "",
 		Value:        "1",
@@ -93,7 +91,7 @@ func CreateMockOPCRTTable(db *gorm.DB) {
 		AlarmDes:     "",
 		IsHistorical: true,
 	})
-	AddRTTableItem(db, "rt_opcdemo", &base.RtTable{
+	handler.AddRTTableItem("rt_opcdemo", &base.RtTable{
 		PID:          "Tag02",
 		Des:          "",
 		Value:        "0",
@@ -105,7 +103,7 @@ func CreateMockOPCRTTable(db *gorm.DB) {
 		AlarmDes:     "",
 		IsHistorical: false,
 	})
-	AddRTTableItem(db, "rt_opcdemo", &base.RtTable{
+	handler.AddRTTableItem("rt_opcdemo", &base.RtTable{
 		PID:          "Tag03",
 		Des:          "",
 		Value:        "false",

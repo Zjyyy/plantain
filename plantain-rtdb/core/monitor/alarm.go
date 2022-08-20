@@ -1,7 +1,6 @@
 package monitor
 
 import (
-	"log"
 	"plantain/base"
 	"plantain/transfer"
 	"strconv"
@@ -41,7 +40,6 @@ func newMonitorAlarm(pDriver *base.PDriver, alarmTransfer *transfer.AlarmHistory
 
 func (m *monitorAlarm) AlarmHandler(pid string, val interface{}) {
 	item := m.alarmConfMap[pid]
-	log.Printf("!!!!!!!!\n")
 	if item.ValueType == "int" {
 		standardLimitUp, _ := strconv.Atoi(item.LimitUp)
 		standardLimitDown, _ := strconv.Atoi(item.LimitDown)

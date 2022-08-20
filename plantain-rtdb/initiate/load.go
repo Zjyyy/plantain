@@ -21,6 +21,7 @@ func LoadLocalInIConfiguration() (base.Config, error) {
 
 func LoadSQLiteConfiguration(conf *base.SqliteConf) ([]base.PDriver, error) {
 	var db *gorm.DB
+
 	_, err := os.Stat(conf.Database)
 
 	db, dbErr := gorm.Open(sqlite.Open(conf.Database))
@@ -29,16 +30,19 @@ func LoadSQLiteConfiguration(conf *base.SqliteConf) ([]base.PDriver, error) {
 		return []base.PDriver{}, dbErr
 	}
 
+	handler := plantainSqlite.NewConfigurationDatabaseHandler(
+		db, conf.DriverListTableName, conf.DriverTableName)
+
 	if err != nil || os.IsNotExist(err) {
 		log.Printf("当前项目下没有Plantain配置库，自动创建样例配置库\n")
 		db.AutoMigrate(
 			&base.RtTable{},
 			&base.PDriverInDatabase{},
 		)
-		plantainSqlite.CreateMockData(db)
+		plantainSqlite.CreateMockData(handler)
 	}
 
-	pDriverArr, err := plantainSqlite.LoadAllDriver(db)
+	pDriverArr, err := handler.LoadAllDriver()
 	if err != nil {
 		log.Printf("加载配置库失败:%v \n", err)
 		return []base.PDriver{}, err

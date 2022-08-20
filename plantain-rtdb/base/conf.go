@@ -5,7 +5,9 @@ import (
 )
 
 type SqliteConf struct {
-	Database string `ini:"database"`
+	Database            string `ini:"database"`
+	DriverListTableName string `int:"driver-list-table-name"`
+	DriverTableName     string `ini:"driver-table-name"`
 }
 type AlarmTranferConf struct {
 	Url      string `ini:"url"`

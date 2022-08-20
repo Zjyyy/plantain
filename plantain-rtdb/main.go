@@ -25,12 +25,12 @@ func main() {
 
 	cacheMap := initiate.ConfigurationMemoryStructure(&driverArr)
 
-	m := initiate.ConfigurationCollector(&collector.CollectorParameters{
+	collector := initiate.ConfigurationCollector(&collector.CollectorParameters{
 		DriverArr:     &driverArr,
 		CacheSet:      &cacheMap,
 		AlarmTransfer: alarmTransfer,
 	})
-	m.Start()
+	collector.Start()
 
 	initiate.ConfigurationHttpServer(":6280")
 
