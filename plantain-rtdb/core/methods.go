@@ -9,14 +9,21 @@ import (
 )
 
 type rtdbMethod struct {
-	cache *cache.Cache
-	alarm *monitor.MonitorAlarm
+	cache      *cache.Cache
+	alarm      *monitor.MonitorAlarm
+	historical *monitor.MonitorHistorical
 }
 
-func NewRtdbMethod(pDriver base.PDriver, cache *cache.Cache, alarmTransfer *transfer.AlarmHistoryTranfer) *rtdbMethod {
+func NewRtdbMethod(
+	pDriver *base.PDriver,
+	cache *cache.Cache,
+	alarmTransfer *transfer.AlarmHistoryTranfer,
+	historical *transfer.HistoricalTransfer,
+) *rtdbMethod {
 	return &rtdbMethod{
-		cache: cache,
-		alarm: monitor.NewMonitorAlarm(&pDriver, alarmTransfer),
+		cache:      cache,
+		alarm:      monitor.NewMonitorAlarm(pDriver, alarmTransfer),
+		historical: monitor.NewMonitorHistorical(pDriver, historical),
 	}
 }
 
@@ -26,6 +33,7 @@ func (m *rtdbMethod) Write(pid string, value interface{}) bool {
 	if found {
 		if oldVal != value {
 			m.alarm.AlarmJuddge(pid, value)
+			m.historical.HistoricalJuddge(pid, value)
 		}
 	} else {
 		panic("Write Method:内存结构出现错误")

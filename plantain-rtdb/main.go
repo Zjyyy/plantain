@@ -21,14 +21,16 @@ func main() {
 		panic(fmt.Sprintf("打开SQLite连接错误：%v \n", err))
 	}
 
-	alarmTransfer := initiate.ConfigurationTransferAlarm(&conf.AlarmTranfer)
+	memoryBlockSet := initiate.ConfigurationMemoryBlockSet(&driverArr)
 
-	cacheMap := initiate.ConfigurationMemoryStructure(&driverArr)
+	alarmTransfer := initiate.ConfigurationAlarmTransfer(&conf.AlarmTranfer)
+	historicalTranfer := initiate.ConfigurationHistoricalTransfer(&conf.HistoricalTranfer)
 
 	collector := initiate.ConfigurationCollector(&collector.CollectorParameters{
-		DriverArr:     &driverArr,
-		CacheSet:      &cacheMap,
-		AlarmTransfer: alarmTransfer,
+		DriverArr:          &driverArr,
+		MemoryBlockSet:     &memoryBlockSet,
+		AlarmTransfer:      alarmTransfer,
+		HistoricalTransfer: historicalTranfer,
 	})
 	collector.Start()
 

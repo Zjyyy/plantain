@@ -11,6 +11,7 @@ type MonitorAlarm struct {
 }
 
 type monitorAlarm struct {
+	table         string
 	alarmTransfer *transfer.AlarmHistoryTranfer
 	alarmConfMap  AlarmConfMap
 }
@@ -25,14 +26,21 @@ type alarmConfItem struct {
 }
 type AlarmConfMap map[string]alarmConfItem
 
-func NewMonitorAlarm(pDriver *base.PDriver, alarmTransfer *transfer.AlarmHistoryTranfer) *MonitorAlarm {
+func NewMonitorAlarm(
+	pDriver *base.PDriver,
+	alarmTransfer *transfer.AlarmHistoryTranfer,
+) *MonitorAlarm {
 	return &MonitorAlarm{
 		monitorAlarm: newMonitorAlarm(pDriver, alarmTransfer),
 	}
 }
 
-func newMonitorAlarm(pDriver *base.PDriver, alarmTransfer *transfer.AlarmHistoryTranfer) *monitorAlarm {
+func newMonitorAlarm(
+	pDriver *base.PDriver,
+	alarmTransfer *transfer.AlarmHistoryTranfer,
+) *monitorAlarm {
 	return &monitorAlarm{
+		table:         pDriver.DriverName,
 		alarmTransfer: alarmTransfer,
 		alarmConfMap:  parseForAlarm(pDriver),
 	}
@@ -47,6 +55,7 @@ func (m *monitorAlarm) AlarmJuddge(pid string, val interface{}) {
 		if val.(int) > standardLimitUp || val.(int) < standardLimitDown {
 			//触发报警
 			m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
+				Table:     m.table,
 				PID:       pid,
 				Des:       item.Des,
 				AlarmDes:  item.AlarmDes,
@@ -61,6 +70,7 @@ func (m *monitorAlarm) AlarmJuddge(pid string, val interface{}) {
 		if val.(float64) > standardLimitUp || val.(float64) < standardLimitDown {
 			//触发报警
 			m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
+				Table:     "",
 				PID:       pid,
 				Des:       item.Des,
 				AlarmDes:  item.AlarmDes,
