@@ -1,5 +1,6 @@
 package core
 
+// go build -buildmode=plugin -o=modbusdriver.so main.go
 import (
 	"plantain/base"
 	"plantain/core/monitor"
@@ -32,8 +33,8 @@ func (m *rtdbMethod) Write(pid string, value interface{}) bool {
 
 	if found {
 		if oldVal != value {
-			m.alarm.AlarmJuddge(pid, value)
-			m.historical.HistoricalJuddge(pid, value)
+			//m.alarm.AlarmJuddge(pid, value)
+			//m.historical.HistoricalJuddge(pid, value)
 		}
 	} else {
 		panic("Write Method:内存结构出现错误")

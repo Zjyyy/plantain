@@ -91,6 +91,21 @@ func (m *monitorAlarm) AlarmJuddge(pid string, val interface{}) {
 				Value:     val.(string),
 			})
 		}
+	} else if item.ValueType == "uint16" {
+		standardLimitUp, _ := strconv.Atoi(item.LimitUp)
+		standardLimitDown, _ := strconv.Atoi(item.LimitDown)
+
+		if val.(uint16) > uint16(standardLimitUp) || val.(uint16) < uint16(standardLimitDown) {
+			//触发报警
+			m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
+				Table:     "",
+				PID:       pid,
+				Des:       item.Des,
+				AlarmDes:  item.AlarmDes,
+				ValueType: item.ValueType,
+				Value:     val.(string),
+			})
+		}
 	}
 }
 
