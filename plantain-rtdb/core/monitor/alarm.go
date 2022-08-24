@@ -48,64 +48,31 @@ func newMonitorAlarm(
 
 func (m *monitorAlarm) AlarmJuddge(pid string, val interface{}) {
 	item := m.alarmConfMap[pid]
-	if item.ValueType == "int" {
-		standardLimitUp, _ := strconv.Atoi(item.LimitUp)
-		standardLimitDown, _ := strconv.Atoi(item.LimitDown)
-
-		if val.(int) > standardLimitUp || val.(int) < standardLimitDown {
-			//触发报警
-			m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
-				Table:     m.table,
-				PID:       pid,
-				Des:       item.Des,
-				AlarmDes:  item.AlarmDes,
-				ValueType: item.ValueType,
-				Value:     val.(string),
-			})
-		}
-	} else if item.ValueType == "float" {
-		standardLimitUp, _ := strconv.ParseFloat(item.LimitUp, 64)
-		standardLimitDown, _ := strconv.ParseFloat(item.LimitDown, 64)
-
-		if val.(float64) > standardLimitUp || val.(float64) < standardLimitDown {
-			//触发报警
-			m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
-				Table:     "",
-				PID:       pid,
-				Des:       item.Des,
-				AlarmDes:  item.AlarmDes,
-				ValueType: item.ValueType,
-				Value:     val.(string),
-			})
-		}
-	} else if item.ValueType == "boolen" {
-		standardLimitUp, _ := strconv.ParseBool(item.LimitUp)
-
-		if val.(bool) == standardLimitUp {
-			//触发报警
-			m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
-				PID:       pid,
-				Des:       item.Des,
-				AlarmDes:  item.AlarmDes,
-				ValueType: item.ValueType,
-				Value:     val.(string),
-			})
-		}
-	} else if item.ValueType == "uint16" {
-		standardLimitUp, _ := strconv.Atoi(item.LimitUp)
-		standardLimitDown, _ := strconv.Atoi(item.LimitDown)
-
-		if val.(uint16) > uint16(standardLimitUp) || val.(uint16) < uint16(standardLimitDown) {
-			//触发报警
-			m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
-				Table:     "",
-				PID:       pid,
-				Des:       item.Des,
-				AlarmDes:  item.AlarmDes,
-				ValueType: item.ValueType,
-				Value:     val.(string),
-			})
-		}
+	var isAlarm bool = false
+	var alarmValue string = ""
+	switch item.ValueType {
+	case "int":
+		isAlarm, alarmValue = m.juddgeInt(&item, val)
+		break
+	case "float":
+		isAlarm, alarmValue = m.juddgeFloat(&item, val)
+		break
+	case "uint16":
+		isAlarm, alarmValue = m.juddgeUint16(&item, val)
+		break
+	case "bool":
+		isAlarm, alarmValue = m.juddgeBool(&item, val)
+		break
+	}
+	if isAlarm {
+		m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
+			Table:     m.table,
+			PID:       pid,
+			Des:       item.Des,
+			AlarmDes:  item.AlarmDes,
+			ValueType: item.ValueType,
+			Value:     alarmValue,
+		})
 	}
 }
 
@@ -122,4 +89,40 @@ func parseForAlarm(pDriver *base.PDriver) AlarmConfMap {
 		}
 	}
 	return result
+}
+
+func (m monitorAlarm) juddgeInt(item *alarmConfItem, val interface{}) (bool, string) {
+	standardLimitUp, _ := strconv.Atoi(item.LimitUp)
+	standardLimitDown, _ := strconv.Atoi(item.LimitDown)
+
+	if val.(int) > standardLimitUp || val.(int) < standardLimitDown {
+		return true, val.(string)
+	}
+	return false, ""
+}
+func (m monitorAlarm) juddgeFloat(item *alarmConfItem, val interface{}) (bool, string) {
+	standardLimitUp, _ := strconv.ParseFloat(item.LimitUp, 64)
+	standardLimitDown, _ := strconv.ParseFloat(item.LimitDown, 64)
+
+	if val.(float64) > standardLimitUp || val.(float64) < standardLimitDown {
+		return true, val.(string)
+	}
+	return false, ""
+}
+func (m monitorAlarm) juddgeBool(item *alarmConfItem, val interface{}) (bool, string) {
+	standardLimitUp, _ := strconv.ParseBool(item.LimitUp)
+
+	if val.(bool) == standardLimitUp {
+		return true, val.(string)
+	}
+	return false, ""
+}
+func (m monitorAlarm) juddgeUint16(item *alarmConfItem, val interface{}) (bool, string) {
+	standardLimitUp, _ := strconv.Atoi(item.LimitUp)
+	standardLimitDown, _ := strconv.Atoi(item.LimitDown)
+
+	if val.(uint16) > uint16(standardLimitUp) || val.(uint16) < uint16(standardLimitDown) {
+		return true, string(val.(uint16))
+	}
+	return false, ""
 }
