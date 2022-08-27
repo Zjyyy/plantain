@@ -8,7 +8,7 @@ type Collector struct {
 	ConnStr       string `json:"connStr"`
 	Setting       string `json:"setting"`
 	Des           string `json:"des"`
-	RtTableName   string `json:"rtTableName"`
+	RtTableName   string `json:"rtTableName" gorm:"unique"`
 }
 
 const CollectorsTableName = "conf_collectors_list"

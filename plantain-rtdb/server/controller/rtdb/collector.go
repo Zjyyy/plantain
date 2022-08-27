@@ -1,6 +1,7 @@
 package rtdb
 
 import (
+	"fmt"
 	"net/http"
 	"plantain/models"
 	"plantain/models/dtos/request"
@@ -10,8 +11,13 @@ import (
 )
 
 func ApiGetCollectorList(c *gin.Context) {
-	data, _ := models.GetAllCollectorList()
-	c.JSON(http.StatusOK, data)
+	data, err := models.GetAllCollectorList()
+
+	c.JSON(http.StatusBadRequest, gin.H{
+		"status":  true,
+		"message": fmt.Sprintf("%v", err),
+		"data":    data,
+	})
 }
 
 func ApiGetCollectorById(c *gin.Context) {
@@ -22,7 +28,7 @@ func ApiGetCollectorById(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  false,
-			"message": err,
+			"message": fmt.Sprintf("%v", err),
 			"data":    "",
 		})
 		return
@@ -42,14 +48,14 @@ func ApiGetCollectorByName(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  false,
-			"message": err,
+			"message": fmt.Sprintf("%v", err),
 			"data":    "",
 		})
 		return
 	}
 	c.JSON(http.StatusBadRequest, gin.H{
 		"status":  true,
-		"message": err,
+		"message": fmt.Sprintf("%v", err),
 		"data":    data,
 	})
 }
@@ -71,7 +77,7 @@ func ApiAddCollectorItemInList(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  false,
-			"message": err,
+			"message": fmt.Sprintf("%v", err),
 			"data":    false,
 		})
 		return
@@ -93,7 +99,7 @@ func ApiDelCollectorItemInListById(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  false,
-			"message": err,
+			"message": fmt.Sprintf("%v", err),
 			"data":    false,
 		})
 		return
@@ -101,7 +107,7 @@ func ApiDelCollectorItemInListById(c *gin.Context) {
 
 	c.JSON(http.StatusBadRequest, gin.H{
 		"status":  true,
-		"message": err,
+		"message": fmt.Sprintf("%v", err),
 		"data":    true,
 	})
 }
@@ -114,7 +120,7 @@ func ApiDelCollectorItemInListByName(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  false,
-			"message": err,
+			"message": fmt.Sprintf("%v", err),
 			"data":    "",
 		})
 		return
@@ -122,7 +128,7 @@ func ApiDelCollectorItemInListByName(c *gin.Context) {
 
 	c.JSON(http.StatusBadRequest, gin.H{
 		"status":  true,
-		"message": err,
+		"message": fmt.Sprintf("%v", err),
 		"data":    "",
 	})
 }

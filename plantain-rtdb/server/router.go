@@ -20,6 +20,11 @@ func RouterWeb(port string) {
 		rtdbRouter.POST("/collector", rtdb.ApiAddCollectorItemInList)
 		rtdbRouter.DELETE("/collector/name/:name", rtdb.ApiDelCollectorItemInListByName)
 		rtdbRouter.DELETE("/collector/id/:id", rtdb.ApiDelCollectorItemInListById)
+
+		rtdbRouter.GET("/rtTable/:tableName", rtdb.ApiGetRTTable)
+		rtdbRouter.DELETE("/rtTable/:tableName/:pid", rtdb.ApiDropRTTable)
+		rtdbRouter.POST("/rtTable/item/:tableName", rtdb.ApiAddItemInRTTable)
+		rtdbRouter.DELETE("/rtTable/item/:tableName", rtdb.ApiDelItemInRTTableByPID)
 	}
 
 	router.Run(port)
