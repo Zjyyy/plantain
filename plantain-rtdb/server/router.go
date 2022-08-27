@@ -1,7 +1,7 @@
 package server
 
 import (
-	"plantain/server/contorl"
+	"plantain/server/controller/rtdb"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,9 +12,14 @@ func RouterWeb(port string) {
 		c.String(200, "Hello, This is Plantain Configuration Tools.")
 	})
 
-	driverRouter := router.Group("/api/v1/rtdb")
+	rtdbRouter := router.Group("/api/v1/rtdb")
 	{
-		driverRouter.GET("/driverList", contorl.ApiReadAllDriver)
+		rtdbRouter.GET("/collector/list", rtdb.ApiGetCollectorList)
+		rtdbRouter.GET("/collector/id/:id", rtdb.ApiGetCollectorById)
+		rtdbRouter.GET("/collector/name/:name", rtdb.ApiGetCollectorByName)
+		rtdbRouter.POST("/collector", rtdb.ApiAddCollectorItemInList)
+		rtdbRouter.DELETE("/collector/name/:name", rtdb.ApiDelCollectorItemInListByName)
+		rtdbRouter.DELETE("/collector/id/:id", rtdb.ApiDelCollectorItemInListById)
 	}
 
 	router.Run(port)

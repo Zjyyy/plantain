@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"plantain/collector"
 	"plantain/initiate"
+	"plantain/models"
 	"syscall"
 )
 
@@ -16,23 +16,25 @@ func main() {
 		panic(fmt.Sprintf("加载config.ini失败：%v \n", err))
 	}
 
-	driverArr, err := initiate.LoadSQLiteConfiguration(&conf.Sqlite)
-	if err != nil {
-		panic(fmt.Sprintf("打开SQLite连接错误：%v \n", err))
-	}
+	models.InitDb(&conf.Sqlite)
 
-	memoryBlockSet := initiate.ConfigurationMemoryBlockSet(&driverArr)
+	// driverArr, err := initiate.LoadSQLiteConfiguration(&conf.Sqlite)
+	// if err != nil {
+	// 	panic(fmt.Sprintf("打开SQLite连接错误：%v \n", err))
+	// }
 
-	alarmTransfer := initiate.ConfigurationAlarmTransfer(&conf.AlarmTranfer)
-	historicalTranfer := initiate.ConfigurationHistoricalTransfer(&conf.HistoricalTranfer)
+	// memoryBlockSet := initiate.ConfigurationMemoryBlockSet(&driverArr)
 
-	collector := initiate.ConfigurationCollector(&collector.CollectorParameters{
-		DriverArr:          &driverArr,
-		MemoryBlockSet:     &memoryBlockSet,
-		AlarmTransfer:      alarmTransfer,
-		HistoricalTransfer: historicalTranfer,
-	})
-	collector.Start()
+	// alarmTransfer := initiate.ConfigurationAlarmTransfer(&conf.AlarmTranfer)
+	// historicalTranfer := initiate.ConfigurationHistoricalTransfer(&conf.HistoricalTranfer)
+
+	// collector := initiate.ConfigurationCollector(&collector.CollectorParameters{
+	// 	DriverArr:          &driverArr,
+	// 	MemoryBlockSet:     &memoryBlockSet,
+	// 	AlarmTransfer:      alarmTransfer,
+	// 	HistoricalTransfer: historicalTranfer,
+	// })
+	// collector.Start()
 
 	initiate.ConfigurationHttpServer(":6280")
 
