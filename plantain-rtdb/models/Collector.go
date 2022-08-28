@@ -54,3 +54,31 @@ func DelCollectorItemInListById(id int) error {
 		Where("id = ?", id).
 		Delete(&Collector{}).Error
 }
+
+func UpdateCollectorItemInListByName(collectorName string, data *Collector) error {
+	maps := make(map[string]interface{})
+	maps["collector_name"] = data.CollectorName
+	maps["version"] = data.Version
+	maps["dll_path"] = data.DllPath
+	maps["conn_str"] = data.ConnStr
+	maps["setting"] = data.ConnStr
+	maps["des"] = data.Des
+	maps["rt_table_name"] = data.RtTableName
+
+	return db.Table(CollectorsTableName).
+		Where("collector_name LIKE ?", "%"+collectorName+"%").
+		Updates(&maps).Error
+}
+func UpdateCollectorItemInListById(id int, data *Collector) error {
+	maps := make(map[string]interface{})
+	maps["collector_name"] = data.CollectorName
+	maps["version"] = data.Version
+	maps["dll_path"] = data.DllPath
+	maps["conn_str"] = data.ConnStr
+	maps["setting"] = data.ConnStr
+	maps["des"] = data.Des
+	maps["rt_table_name"] = data.RtTableName
+	return db.Table(CollectorsTableName).
+		Where("id = ?", id).
+		Updates(&maps).Error
+}

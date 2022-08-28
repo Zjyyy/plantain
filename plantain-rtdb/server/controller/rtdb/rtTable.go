@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"plantain/models"
+	"plantain/models/dtos/request"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +26,27 @@ func ApiGetRTTable(c *gin.Context) {
 		"status":  true,
 		"message": fmt.Sprintf("%v", err),
 		"data":    data,
+	})
+}
+
+func ApiCreateRTTable(c *gin.Context) {
+	tableName := c.Param("tableName")
+
+	err := models.CreateRTTable(tableName)
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  false,
+			"message": fmt.Sprintf("%v", err),
+			"data":    false,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  true,
+		"message": fmt.Sprintf("%v", err),
+		"data":    true,
 	})
 }
 
@@ -68,6 +90,42 @@ func ApiDelItemInRTTableByPID(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  true,
 		"message": "",
+		"data":    true,
+	})
+}
+
+func ApiUpdateItemInRTTable(c *gin.Context) {
+	tableName := c.Param("tableName")
+	pid := c.Param("pid")
+
+	var data request.RTTableReqDto
+	c.BindJSON(&data)
+
+	err := models.UpdateItemInRTTableByPID(tableName, pid, &models.RtTable{
+		PID:          data.PID,
+		Value:        data.Value,
+		ValueType:    data.ValueType,
+		Des:          data.Des,
+		Address:      data.Address,
+		LimitUp:      data.LimitUp,
+		LimitDown:    data.LimitDown,
+		Level:        data.Level,
+		AlarmDes:     data.AlarmDes,
+		IsHistorical: data.IsHistorical,
+	})
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  false,
+			"message": fmt.Sprintf("%v", err),
+			"data":    false,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  true,
+		"message": fmt.Sprintf("%v", err),
 		"data":    true,
 	})
 }

@@ -132,3 +132,67 @@ func ApiDelCollectorItemInListByName(c *gin.Context) {
 		"data":    "",
 	})
 }
+
+func ApiUpdateCollectorItemInListByName(c *gin.Context) {
+	name := c.Param("name")
+
+	var data request.CollectorReq
+	c.BindJSON(&data)
+
+	err := models.UpdateCollectorItemInListByName(name, &models.Collector{
+		CollectorName: data.CollectorName,
+		Version:       data.Version,
+		DllPath:       data.DllPath,
+		ConnStr:       data.ConnStr,
+		Setting:       data.Setting,
+		Des:           data.Des,
+		RtTableName:   data.RtTableName,
+	})
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  false,
+			"message": fmt.Sprintf("%v", err),
+			"data":    false,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  true,
+		"message": fmt.Sprintf("%v", err),
+		"data":    true,
+	})
+}
+
+func ApiUpdateCollectorItemInListById(c *gin.Context) {
+	idStr := c.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	var data request.CollectorReq
+	c.BindJSON(&data)
+
+	err := models.UpdateCollectorItemInListById(id, &models.Collector{
+		CollectorName: data.CollectorName,
+		Version:       data.Version,
+		DllPath:       data.DllPath,
+		ConnStr:       data.ConnStr,
+		Setting:       data.Setting,
+		Des:           data.Des,
+		RtTableName:   data.RtTableName,
+	})
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  false,
+			"message": fmt.Sprintf("%v", err),
+			"data":    false,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  true,
+		"message": fmt.Sprintf("%v", err),
+		"data":    true,
+	})
+}

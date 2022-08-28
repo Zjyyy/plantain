@@ -8,7 +8,7 @@ import (
 )
 
 type RtTable struct {
-	PID          string `json:"pid" gorm:"column:pid" gorm:"unique"`
+	PID          string `json:"pid" gorm:"unique;"`
 	Value        string `json:"value"`
 	ValueType    string `json:"valueType"`
 	Des          string `json:"des"`
@@ -41,7 +41,7 @@ func CreateRTTable(tableName string) error {
 		db.Migrator().DropTable("rt_tables")
 	}
 	if hasTable := db.Migrator().HasTable(tableName); hasTable {
-		return errors.New("driver table has exist.")
+		return errors.New("table is exist.")
 	}
 	log.Printf("start create rt_tables as temp table.")
 
@@ -66,8 +66,26 @@ func DeleteItemInRTTableByPID(tableName string, pid string) error {
 	return db.Table(tableName).
 		Delete(
 			&base.RtTable{},
-			"pid LIKE ?",
+			"p_id LIKE ?",
 			"%"+pid+"%").Error
+}
+
+func UpdateItemInRTTableByPID(tableName string, pid string, data *RtTable) error {
+	maps := make(map[string]interface{})
+	maps["p_id"] = data.PID
+	maps["value"] = data.Value
+	maps["value_type"] = data.ValueType
+	maps["des"] = data.Des
+	maps["address"] = data.Address
+	maps["limit_up"] = data.LimitUp
+	maps["limit_down"] = data.LimitDown
+	maps["level"] = data.Level
+	maps["alarm_des"] = data.AlarmDes
+	maps["is_historical"] = data.IsHistorical
+
+	return db.Table(tableName).
+		Where("p_id LIKE ?", "%"+pid+"%").
+		Updates(&maps).Error
 }
 
 func DropRTTable(tableName string) error {
