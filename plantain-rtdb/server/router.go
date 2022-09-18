@@ -14,15 +14,24 @@ func RouterWeb(port string) {
 
 	rtdbRouter := router.Group("/api/v1/rtdb")
 	{
+		// CURD Collector
 		rtdbRouter.GET("/collector/list", rtdb.ApiGetCollectorList)
 		rtdbRouter.GET("/collector/id/:id", rtdb.ApiGetCollectorById)
+		rtdbRouter.GET("/collectorWithRtTableSet/id/:id",
+			rtdb.ApiGetCollectorByIdWithRtTableSet)
+		rtdbRouter.GET("/collectorWithRtTableSet/name/:name",
+			rtdb.ApiGetCollectorByNameWithRtTableSet)
 		rtdbRouter.GET("/collector/name/:name", rtdb.ApiGetCollectorByName)
 		rtdbRouter.POST("/collector", rtdb.ApiAddCollectorItemInList)
+		rtdbRouter.POST("/collectorAndRtTable", rtdb.ApiAddCollectorItemInListAndCreateRtTable)
 		rtdbRouter.DELETE("/collector/name/:name", rtdb.ApiDelCollectorItemInListByName)
+		rtdbRouter.DELETE("/collectorAndRtTable/name/:name", rtdb.ApiDelCollectorItemInListAndDropRtTableByName)
 		rtdbRouter.DELETE("/collector/id/:id", rtdb.ApiDelCollectorItemInListById)
+		rtdbRouter.DELETE("/collectorAndRtTable/id/:id", rtdb.ApiDelCollectorItemInListAndDropRtTableById)
 		rtdbRouter.PUT("/collector/id/:id", rtdb.ApiUpdateCollectorItemInListById)
 		rtdbRouter.PUT("/collector/name/:name", rtdb.ApiUpdateCollectorItemInListByName)
 
+		// CURD RtTable
 		rtdbRouter.POST("/rtTable/create/:tableName", rtdb.ApiCreateRTTable)
 		rtdbRouter.DELETE("/rtTable/drop/:tableName", rtdb.ApiDropRTTable)
 		rtdbRouter.GET("/rtTable/:tableName", rtdb.ApiGetRTTable)

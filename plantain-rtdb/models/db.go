@@ -20,7 +20,6 @@ func InitDb(conf *base.SqliteConf) {
 	db, dbErr = gorm.Open(sqlite.Open(conf.Database), &gorm.Config{
 		Logger:                                   logger.Default.LogMode(logger.Silent),
 		DisableForeignKeyConstraintWhenMigrating: true,
-		SkipDefaultTransaction:                   true,
 	})
 	if dbErr != nil {
 		log.Printf("打开SQLite连接错误：%v \n", dbErr)

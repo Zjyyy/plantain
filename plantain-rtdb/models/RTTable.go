@@ -5,7 +5,14 @@ import (
 	"fmt"
 	"log"
 	"plantain/base"
+	"time"
 )
+
+// 用于存储创建出的RTTable表
+type RTTableCreateRecord struct {
+	TableName  string    `json:"tableName"`
+	CreateTime time.Time `gorm:"autoCreateTime;type:datetime"`
+}
 
 type RtTable struct {
 	PID          string `json:"pid" gorm:"unique;"`
