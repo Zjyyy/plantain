@@ -4,10 +4,9 @@ import (
 	"plantain/base"
 	"plantain/collector"
 	"plantain/core"
+	"plantain/models"
 	"plantain/server"
 	"plantain/transfer"
-
-	"github.com/patrickmn/go-cache"
 )
 
 func ConfigurationAlarmTransfer(conf *base.AlarmTranferConf) *transfer.AlarmHistoryTranfer {
@@ -18,8 +17,10 @@ func ConfigurationHistoricalTransfer(conf *base.HistoricalTranferConf) *transfer
 	return transfer.NewHistoricalTransfer(conf)
 }
 
-func ConfigurationMemoryBlockSet(driverArr *[]base.PDriver) map[string]*cache.Cache {
-	return core.BuildMemoryBlockSet(driverArr)
+func ConfigurationMemoryBlockSet(collectorArr *[]models.CollectorWithRtTable) *core.MemoryBlock {
+	memoryBlock := *core.NewMemoryBlock()
+	memoryBlock.BuildMemoryBlockSet(collectorArr)
+	return &memoryBlock
 }
 
 func ConfigurationCollector(cp *collector.CollectorParameters) *collector.DriverManager {

@@ -5,6 +5,7 @@ import (
 	"os"
 	"plantain/base"
 	plantainSqlite "plantain/base/sqlite"
+	"plantain/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -17,6 +18,14 @@ func LoadLocalInIConfiguration() (base.Config, error) {
 		return base.Config{}, err
 	}
 	return config, nil
+}
+
+func LoadAllCollectorWithRTTableSet(conf *base.SqliteConf) ([]models.CollectorWithRtTable, error) {
+	result, err := models.GetAllCollectorWithRtTable()
+	if err != nil {
+		return []models.CollectorWithRtTable{}, err
+	}
+	return result, err
 }
 
 func LoadSQLiteConfiguration(conf *base.SqliteConf) ([]base.PDriver, error) {

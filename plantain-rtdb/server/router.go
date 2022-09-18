@@ -1,6 +1,7 @@
 package server
 
 import (
+	"plantain/server/controller/monitor"
 	"plantain/server/controller/rtdb"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ func RouterWeb(port string) {
 		c.String(200, "Hello, This is Plantain Configuration Tools.")
 	})
 
+	// RTDB相关配置
 	rtdbRouter := router.Group("/api/v1/rtdb")
 	{
 		// CURD Collector
@@ -40,5 +42,11 @@ func RouterWeb(port string) {
 		rtdbRouter.PUT("/rtTable/item/:tableName/:pid", rtdb.ApiUpdateItemInRTTable)
 	}
 
+	// 查看实时值、报警、历史值
+	monitorRouter := router.Group("/api/v1/monitor")
+	{
+		monitorRouter.GET("rtValue/byRtTable/:tableName", monitor.ApiGetRtTableRealTimeValueByTableName)
+		monitorRouter.GET("rtValue/byPID/:pid", monitor.ApiGetRealTimeValueByPID)
+	}
 	router.Run(port)
 }

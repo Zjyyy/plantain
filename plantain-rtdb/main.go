@@ -17,13 +17,13 @@ func main() {
 	}
 
 	models.InitDb(&conf.Sqlite)
+	collectorWithRtTableSetArr, err := initiate.LoadAllCollectorWithRTTableSet(&conf.Sqlite)
+	if err != nil {
+		panic(fmt.Sprintf("从配置库中加载Collector错误:%v \n", err))
+	}
 
-	// driverArr, err := initiate.LoadSQLiteConfiguration(&conf.Sqlite)
-	// if err != nil {
-	// 	panic(fmt.Sprintf("打开SQLite连接错误：%v \n", err))
-	// }
-
-	// memoryBlockSet := initiate.ConfigurationMemoryBlockSet(&driverArr)
+	memoryBlock := initiate.ConfigurationMemoryBlockSet(&collectorWithRtTableSetArr)
+	println(memoryBlock)
 
 	// alarmTransfer := initiate.ConfigurationAlarmTransfer(&conf.AlarmTranfer)
 	// historicalTranfer := initiate.ConfigurationHistoricalTransfer(&conf.HistoricalTranfer)

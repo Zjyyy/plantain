@@ -30,6 +30,25 @@ func GetAllCollectorList() ([]Collector, error) {
 	return cList, result.Error
 }
 
+func GetAllCollectorWithRtTable() ([]CollectorWithRtTable, error) {
+	var collectWithRtTable []CollectorWithRtTable
+	cList, err := GetAllCollectorList()
+	if err != nil {
+		return []CollectorWithRtTable{}, err
+	}
+	for _, collector := range cList {
+		rtTable, err := GetRTTable(collector.RtTableName)
+		if err != nil {
+			return []CollectorWithRtTable{}, err
+		}
+		collectWithRtTable = append(collectWithRtTable, CollectorWithRtTable{
+			Collector:  collector,
+			RtTableSet: rtTable,
+		})
+	}
+	return collectWithRtTable, nil
+}
+
 func GetCollectorByName(name string) (Collector, error) {
 	var collector Collector
 	result := db.Table(CollectorsTableName).
