@@ -20,7 +20,7 @@ func LoadLocalInIConfiguration() (base.Config, error) {
 	return config, nil
 }
 
-func LoadAllCollectorWithRTTableSet(conf *base.SqliteConf) ([]models.CollectorWithRtTable, error) {
+func LoadAllCollectorConfigure(conf *base.SqliteConf) ([]models.CollectorWithRtTable, error) {
 	result, err := models.GetAllCollectorWithRtTable()
 	if err != nil {
 		return []models.CollectorWithRtTable{}, err

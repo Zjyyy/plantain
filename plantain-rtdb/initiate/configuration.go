@@ -23,8 +23,8 @@ func ConfigurationMemoryBlockSet(collectorArr *[]models.CollectorWithRtTable) *c
 	return &memoryBlock
 }
 
-func ConfigurationCollector(cp *collector.CollectorParameters) *collector.DriverManager {
-	return collector.InitCollector(cp)
+func ConfigurationCollector(cp *collector.CollectorParameters) *collector.CollectorManager {
+	return collector.NewCollectorManager(cp)
 }
 
 func ConfigurationHttpServer(port string) {

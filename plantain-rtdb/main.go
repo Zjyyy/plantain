@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"plantain/collector"
 	"plantain/initiate"
 	"plantain/models"
 	"syscall"
@@ -17,24 +18,24 @@ func main() {
 	}
 
 	models.InitDb(&conf.Sqlite)
-	collectorWithRtTableSetArr, err := initiate.LoadAllCollectorWithRTTableSet(&conf.Sqlite)
+	collectorWithRtTableSetArr, err := initiate.LoadAllCollectorConfigure(&conf.Sqlite)
 	if err != nil {
 		panic(fmt.Sprintf("从配置库中加载Collector错误:%v \n", err))
 	}
 
 	memoryBlock := initiate.ConfigurationMemoryBlockSet(&collectorWithRtTableSetArr)
 	println(memoryBlock)
+	alarmTransfer := initiate.ConfigurationAlarmTransfer(&conf.AlarmTranfer)
+	historicalTranfer := initiate.ConfigurationHistoricalTransfer(&conf.HistoricalTranfer)
 
-	// alarmTransfer := initiate.ConfigurationAlarmTransfer(&conf.AlarmTranfer)
-	// historicalTranfer := initiate.ConfigurationHistoricalTransfer(&conf.HistoricalTranfer)
-
-	// collector := initiate.ConfigurationCollector(&collector.CollectorParameters{
-	// 	DriverArr:          &driverArr,
-	// 	MemoryBlockSet:     &memoryBlockSet,
-	// 	AlarmTransfer:      alarmTransfer,
-	// 	HistoricalTransfer: historicalTranfer,
-	// })
-	// collector.Start()
+	collectorManager := initiate.ConfigurationCollector(&collector.CollectorParameters{
+		CollectorArr:       &collectorWithRtTableSetArr,
+		MemoryBlock:        memoryBlock,
+		AlarmTransfer:      alarmTransfer,
+		HistoricalTransfer: historicalTranfer,
+	})
+	println(collectorManager)
+	// collectorManager.Start()
 
 	initiate.ConfigurationHttpServer(":6280")
 
