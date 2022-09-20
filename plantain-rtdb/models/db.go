@@ -39,7 +39,7 @@ func InitDb(conf *base.SqliteConf) {
 		log.Printf("当前项目下没有Plantain配置库，自动创建样例配置库\n")
 		db.AutoMigrate(
 			&Collector{},
-			//&RtTable{},
+			&RtTable{},
 		)
 
 		CreateMockData()

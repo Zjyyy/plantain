@@ -1,7 +1,7 @@
 package models
 
 func CreateMockData() {
-	AddCollectorItemInList(&Collector{
+	AddCollectorItemInListAndCreateRtTable(&Collector{
 		Id:            1,
 		CollectorName: "MockModbus1",
 		Version:       "0.0.1",

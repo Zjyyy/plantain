@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var RestartChan = make(chan interface{}, 1)
+
 func RouterWeb(port string) {
 	router := gin.Default()
 	router.GET("/", func(c *gin.Context) {
@@ -16,6 +18,11 @@ func RouterWeb(port string) {
 	// RTDB相关配置
 	rtdbRouter := router.Group("/api/v1/rtdb")
 	{
+		// System Collector
+		rtdbRouter.POST("/restart", func(c *gin.Context) {
+			RestartChan <- 1
+		})
+
 		// CURD Collector
 		rtdbRouter.GET("/collector/list", rtdb.ApiGetCollectorList)
 		rtdbRouter.GET("/collector/id/:id", rtdb.ApiGetCollectorById)

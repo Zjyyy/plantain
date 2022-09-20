@@ -25,23 +25,28 @@ func (d *driver) Initialize(conf common.DriverConfigure, rtdb common.IRTDB) erro
 }
 
 func (d *driver) Do() error {
-	if !d.modbusClient.IsConnected() {
-		err := d.modbusClient.Connect()
-		if err != nil {
-			return err
-		}
-	}
-	results, err := d.modbusClient.ReadHoldingRegisters(1, 0, 1)
-	if err != nil {
-		return err
-	}
-	d.rtdb.Write("Tag01", results[0])
-
+	d.rtdb.Write("Tag01", "1")
 	val := d.rtdb.Read("Tag01")
 	log.Printf(">>Tag01:%v", val)
-
 	time.Sleep(time.Duration(2) * time.Second)
 	return nil
+	// if !d.modbusClient.IsConnected() {
+	// 	err := d.modbusClient.Connect()
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
+	// results, err := d.modbusClient.ReadHoldingRegisters(1, 0, 1)
+	// if err != nil {
+	// 	return err
+	// }
+	// d.rtdb.Write("Tag01", results[0])
+
+	// val := d.rtdb.Read("Tag01")
+	// log.Printf(">>Tag01:%v", val)
+
+	// time.Sleep(time.Duration(2) * time.Second)
+	// return nil
 }
 
 var Driver driver
