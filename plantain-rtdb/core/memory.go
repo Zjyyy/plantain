@@ -8,6 +8,9 @@ import (
 	"github.com/patrickmn/go-cache"
 )
 
+// 供plantain-RTDB操作
+var MemoryBlockHandler *MemoryBlock
+
 type MemoryBlock struct {
 	*memoryBlock
 }

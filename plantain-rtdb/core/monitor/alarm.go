@@ -1,8 +1,8 @@
 package monitor
 
 import (
-	"plantain/base"
-	"plantain/transfer"
+	"plantain/models"
+	"plantain/pipeline"
 	"strconv"
 )
 
@@ -11,8 +11,8 @@ type MonitorAlarm struct {
 }
 
 type monitorAlarm struct {
-	table         string
-	alarmTransfer *transfer.AlarmHistoryTranfer
+	name          string
+	alarmPipeline *pipeline.AlarmPipeline
 	alarmConfMap  AlarmConfMap
 }
 
@@ -27,22 +27,22 @@ type alarmConfItem struct {
 type AlarmConfMap map[string]alarmConfItem
 
 func NewMonitorAlarm(
-	pDriver *base.PDriver,
-	alarmTransfer *transfer.AlarmHistoryTranfer,
+	collector *models.CollectorWithRtTable,
+	alarmTransfer *pipeline.AlarmPipeline,
 ) *MonitorAlarm {
 	return &MonitorAlarm{
-		monitorAlarm: newMonitorAlarm(pDriver, alarmTransfer),
+		monitorAlarm: newMonitorAlarm(collector, alarmTransfer),
 	}
 }
 
 func newMonitorAlarm(
-	pDriver *base.PDriver,
-	alarmTransfer *transfer.AlarmHistoryTranfer,
+	collector *models.CollectorWithRtTable,
+	alarmPipeline *pipeline.AlarmPipeline,
 ) *monitorAlarm {
 	return &monitorAlarm{
-		table:         pDriver.DriverName,
-		alarmTransfer: alarmTransfer,
-		alarmConfMap:  parseForAlarm(pDriver),
+		name:          collector.CollectorName,
+		alarmPipeline: alarmPipeline,
+		alarmConfMap:  parseForAlarm(collector),
 	}
 }
 
@@ -65,8 +65,8 @@ func (m *monitorAlarm) AlarmJuddge(pid string, val interface{}) {
 		break
 	}
 	if isAlarm {
-		m.alarmTransfer.AddAlarm(base.AlarmHistoryMessage{
-			Table:     m.table,
+		m.alarmPipeline.AddAlarm(models.AlarmMessage{
+			Table:     m.name,
 			PID:       pid,
 			Des:       item.Des,
 			AlarmDes:  item.AlarmDes,
@@ -76,9 +76,9 @@ func (m *monitorAlarm) AlarmJuddge(pid string, val interface{}) {
 	}
 }
 
-func parseForAlarm(pDriver *base.PDriver) AlarmConfMap {
+func parseForAlarm(collector *models.CollectorWithRtTable) AlarmConfMap {
 	result := make(map[string]alarmConfItem)
-	for _, item := range pDriver.RtTable {
+	for _, item := range collector.RtTableSet {
 		result[item.PID] = alarmConfItem{
 			Des:       item.Des,
 			ValueType: item.ValueType,

@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"plantain/collector"
+	"plantain/core"
 	"plantain/initiate"
 	"plantain/models"
 	"plantain/server"
@@ -26,16 +27,15 @@ func main() {
 				log.Fatalln(fmt.Sprintf("从配置库中加载Collector错误:%v \n", err))
 			}
 
-			memoryBlock := initiate.ConfigurationMemoryBlockSet(&collectorWithRtTableSetArr)
-			println(memoryBlock)
-			alarmTransfer := initiate.ConfigurationAlarmTransfer(&conf.AlarmTranfer)
-			historicalTranfer := initiate.ConfigurationHistoricalTransfer(&conf.HistoricalTranfer)
+			core.MemoryBlockHandler = initiate.ConfigurationMemoryBlockSet(&collectorWithRtTableSetArr)
+			alarmTransfer := initiate.ConfigurationAlarmPipeline(&conf.AlarmTranfer)
+			historicalPipeline := initiate.ConfigurationHistoricalPipeline(&conf.HistoricalTranfer)
 
 			collectorManager := initiate.ConfigurationCollector(&collector.CollectorParameters{
 				CollectorArr:       &collectorWithRtTableSetArr,
-				MemoryBlock:        memoryBlock,
+				MemoryBlock:        core.MemoryBlockHandler,
 				AlarmTransfer:      alarmTransfer,
-				HistoricalTransfer: historicalTranfer,
+				HistoricalPipeline: historicalPipeline,
 			})
 
 			collectorManager.Start()

@@ -2,8 +2,8 @@ package monitor
 
 import (
 	"fmt"
-	"plantain/base"
-	"plantain/transfer"
+	"plantain/models"
+	"plantain/pipeline"
 )
 
 type MonitorHistorical struct {
@@ -11,8 +11,8 @@ type MonitorHistorical struct {
 }
 
 type monitorHistorical struct {
-	table              string
-	historicalTransfer *transfer.HistoricalTransfer
+	name               string
+	historicalPipeline *pipeline.HistoricalPipeline
 	historicalConfMap  HistoricalConfMap
 }
 
@@ -23,17 +23,20 @@ type historicalConfItem struct {
 	ValueType    string
 }
 
-func NewMonitorHistorical(pDriver *base.PDriver, historicalTransfer *transfer.HistoricalTransfer) *MonitorHistorical {
+func NewMonitorHistorical(
+	collector *models.CollectorWithRtTable,
+	historicalTransfer *pipeline.HistoricalPipeline,
+) *MonitorHistorical {
 	return &MonitorHistorical{
-		newMonitorHistorical(pDriver, historicalTransfer),
+		newMonitorHistorical(collector, historicalTransfer),
 	}
 }
 
-func newMonitorHistorical(pDriver *base.PDriver, historicalTransfer *transfer.HistoricalTransfer) *monitorHistorical {
+func newMonitorHistorical(collector *models.CollectorWithRtTable, historicalPipeline *pipeline.HistoricalPipeline) *monitorHistorical {
 	return &monitorHistorical{
-		table:              pDriver.DriverName,
-		historicalTransfer: historicalTransfer,
-		historicalConfMap:  parseForHistorical(pDriver),
+		name:               collector.CollectorName,
+		historicalPipeline: historicalPipeline,
+		historicalConfMap:  parseForHistorical(collector),
 	}
 }
 
@@ -42,32 +45,32 @@ func (m *monitorHistorical) HistoricalJuddge(pid string, val interface{}) {
 	if item.IsHistorical {
 		//将变动操作存放到历史库
 		if item.ValueType == "int" {
-			m.historicalTransfer.AddHistorical(base.HistoricalMessage{
-				Table:     m.table,
+			m.historicalPipeline.AddHistorical(models.HistoricalMessage{
+				Table:     m.name,
 				PID:       pid,
 				Des:       item.Des,
 				Value:     fmt.Sprintf("%d", val.(int)),
 				ValueType: item.ValueType,
 			})
 		} else if item.ValueType == "float" {
-			m.historicalTransfer.AddHistorical(base.HistoricalMessage{
-				Table:     m.table,
+			m.historicalPipeline.AddHistorical(models.HistoricalMessage{
+				Table:     m.name,
 				PID:       pid,
 				Des:       item.Des,
 				Value:     fmt.Sprintf("%f", val.(float64)),
 				ValueType: item.ValueType,
 			})
 		} else if item.ValueType == "string" {
-			m.historicalTransfer.AddHistorical(base.HistoricalMessage{
-				Table:     m.table,
+			m.historicalPipeline.AddHistorical(models.HistoricalMessage{
+				Table:     m.name,
 				PID:       pid,
 				Des:       item.Des,
 				Value:     val.(string),
 				ValueType: item.ValueType,
 			})
 		} else if item.ValueType == "boolen" {
-			m.historicalTransfer.AddHistorical(base.HistoricalMessage{
-				Table:     m.table,
+			m.historicalPipeline.AddHistorical(models.HistoricalMessage{
+				Table:     m.name,
 				PID:       pid,
 				Des:       item.Des,
 				Value:     fmt.Sprint(val.(bool)),
@@ -78,9 +81,9 @@ func (m *monitorHistorical) HistoricalJuddge(pid string, val interface{}) {
 	}
 }
 
-func parseForHistorical(pDriver *base.PDriver) HistoricalConfMap {
+func parseForHistorical(collector *models.CollectorWithRtTable) HistoricalConfMap {
 	result := make(HistoricalConfMap)
-	for _, item := range pDriver.RtTable {
+	for _, item := range collector.RtTableSet {
 		result[item.PID] = historicalConfItem{
 			IsHistorical: item.IsHistorical,
 			Des:          item.Des,

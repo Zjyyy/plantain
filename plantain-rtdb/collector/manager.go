@@ -5,7 +5,7 @@ import (
 	"plantain-common/common"
 	"plantain/core"
 	"plantain/models"
-	"plantain/transfer"
+	"plantain/pipeline"
 	"plugin"
 )
 
@@ -25,8 +25,8 @@ type CollectorPlugin struct {
 type CollectorParameters struct {
 	CollectorArr       *[]models.CollectorWithRtTable
 	MemoryBlock        *core.MemoryBlock
-	AlarmTransfer      *transfer.AlarmHistoryTranfer
-	HistoricalTransfer *transfer.HistoricalTransfer
+	AlarmTransfer      *pipeline.AlarmPipeline
+	HistoricalPipeline *pipeline.HistoricalPipeline
 }
 
 func NewCollectorManager(collectorParameters *CollectorParameters) *CollectorManager {
@@ -44,7 +44,7 @@ func newCollectorManager(cp *CollectorParameters) *collectorManager {
 			collector.CollectorName,
 			cp.MemoryBlock,
 			cp.AlarmTransfer,
-			cp.HistoricalTransfer,
+			cp.HistoricalPipeline,
 		)
 
 		collectorPlugins[index] = CollectorPlugin{

@@ -5,16 +5,16 @@ import (
 	"plantain/collector"
 	"plantain/core"
 	"plantain/models"
+	"plantain/pipeline"
 	"plantain/server"
-	"plantain/transfer"
 )
 
-func ConfigurationAlarmTransfer(conf *base.AlarmTranferConf) *transfer.AlarmHistoryTranfer {
-	return transfer.NewAlarmHistoryTranfer(conf)
+func ConfigurationAlarmPipeline(conf *base.AlarmTranferConf) *pipeline.AlarmPipeline {
+	return pipeline.NewAlarmPipeline(conf)
 }
 
-func ConfigurationHistoricalTransfer(conf *base.HistoricalTranferConf) *transfer.HistoricalTransfer {
-	return transfer.NewHistoricalTransfer(conf)
+func ConfigurationHistoricalPipeline(conf *base.HistoricalTranferConf) *pipeline.HistoricalPipeline {
+	return pipeline.NewHistoricalTransfer(conf)
 }
 
 func ConfigurationMemoryBlockSet(collectorArr *[]models.CollectorWithRtTable) *core.MemoryBlock {

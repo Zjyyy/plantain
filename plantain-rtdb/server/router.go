@@ -52,8 +52,8 @@ func RouterWeb(port string) {
 	// 查看实时值、报警、历史值
 	monitorRouter := router.Group("/api/v1/monitor")
 	{
-		monitorRouter.GET("rtValue/byRtTable/:tableName", monitor.ApiGetRtTableRealTimeValueByTableName)
-		monitorRouter.GET("rtValue/byPID/:pid", monitor.ApiGetRealTimeValueByPID)
+		monitorRouter.GET("rtValue/:collectorName", monitor.ApiGetRtTableRealTimeValueList)
+		monitorRouter.GET("rtValue/:collectorName/:pid", monitor.ApiGetRtTableRealTimeValue)
 	}
 	router.Run(port)
 }
